@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ConferenceTracker.Entities
 {
-    public class Speaker 
+    public class Speaker : IValidatableObject
     {
         [Required]
         public int Id { get; set; }
@@ -35,5 +35,16 @@ namespace ConferenceTracker.Entities
         public string PhoneNumber { get; set; }
 
         public bool IsStaff { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var validationResults = new List<ValidationResult>();
+            if (EmailAddress != null && EmailAddress.EndsWith("TechnologyLiveConference.com", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var rejectedEmailAddress = new ValidationResult("Technology Live Conference staff should not use their conference email addresses.");
+                validationResults.Add(rejectedEmailAddress);
+            }
+            return validationResults;
+        }
     }
 }
